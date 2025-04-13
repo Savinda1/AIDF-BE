@@ -1,0 +1,24 @@
+# Node.js dependencies
+node_modules/
+
+# Environment variables
+.env
+
+# React build files
+build/
+
+# Compiled backend files (if using TS)
+dist/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/
