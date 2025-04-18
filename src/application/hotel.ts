@@ -2,7 +2,10 @@ import { NextFunction,Request, Response } from "express";
 import Hotel from "../infrastructure/schemas/Hotel";
 import NotFoundError from "../domin/errors/not-found-error";
 import ValidationError from "../domin/errors/validation-error";
-import { CreateHotelDTO } from "../domin/dtos/hotel";
+import { CreateHotelDTO,UpdateHotelDTO } from "../domin/dtos/hotel";
+import mongoose from "mongoose";
+
+
 import OpenAI from "openai";
 import { Messages } from "openai/resources/chat/completions/messages";
 
@@ -226,49 +229,6 @@ const sleep = (ms:number) => new Promise((resolve) => setTimeout(resolve, ms));
     return;
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-export const createHotel= async(
-  req: Request,
-  res: Response,
-  next: NextFunction
-)=>{
-  try {
-const hotel= CreateHotelDTO.safeParse(req.body);
-
-if (!hotel.success) {
-  throw new ValidationError(hotel.error.message);
-}
- // Add the hotel
- await Hotel.create({
-      name: hotel.data.name,
-      location: hotel.data.location,
-      image: hotel.data.image,
-      price: parseInt(hotel.data.price),
-      description: hotel.data.description,
-    });
-
-      // Return the response
-res.status(201).send();
-return;}
-catch(error){
-  next(error);    
-}
-  };
- 
-
   export const deleteHotel = async (
     req: Request,
     res: Response,
@@ -286,34 +246,59 @@ catch(error){
       next(error);
     }
   };
-  
+
+export const createHotel= async(
+  req: Request,
+  res: Response,
+  next: NextFunction
+)=>{
+  try {
+const hotel= CreateHotelDTO.safeParse(req.body);
+
+if (!hotel.success) {
+  throw new ValidationError(hotel.error.message);
+}
+ // Add the hotel
+ await Hotel.create({
+      name: hotel.data.name,
+      location: hotel.data.location,
+      image: hotel.data.image,
+      price: hotel.data.price,
+      description: hotel.data.description,
+    });
+
+      // Return the response
+res.status(201).send();
+return;}
+catch(error){
+  next(error);    
+}
+  };
+ 
+
   export const updateHotel = async (
     req: Request,
     res: Response,
     next: NextFunction
-    ) => {
-    try{
-    const hotelId = req.params.hotelId;
-    const updatedHotel = req.body;
+  ) => {
+    try {
+      const hotelId = req.params.id;
+      const updatedHotel = req.body;
+
+  const hotel= UpdateHotelDTO.safeParse(req.body);
+
+      if (!hotel.success) {
+        throw new ValidationError(hotel.error.message);
+      }
   
-    // Validate the request data
-    if (
-      !updatedHotel.name ||
-      !updatedHotel.location ||
-      !updatedHotel.rating ||
-      !updatedHotel.reviews ||
-      !updatedHotel.image ||
-      !updatedHotel.price ||
-      !updatedHotel.description
-    ) {
-      throw new ValidationError("Invalid hotel data");
-     // res.status(400).send();
+      await Hotel.findByIdAndUpdate(hotelId, updatedHotel);
+     
+      // Return the response
+      res.status(200).send();
+      return;
+    } catch (error) {
+      next(error);
     }
-await Hotel.findByIdAndUpdate(hotelId, updatedHotel);
-  
-    // Return the response
-    res.status(200).send();
-    return;}
-    catch(error){
-      next(error);}
   };
+
+  

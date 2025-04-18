@@ -2,14 +2,14 @@ import { isAuthenticated } from './middlewares/authentication-middleware';
 import express from "express";
 import {
   createBooking,
-  getAllBookingsForHotel,
+  deleteBooking,
   getAllBookings,
 } from "../application/booking";
 
 const bookingsRouter = express.Router();
 
 bookingsRouter.route("/").post(createBooking).get(getAllBookings);
-bookingsRouter.route("/hotels/:hotelId").get(isAuthenticated,getAllBookingsForHotel);
+bookingsRouter.route("/:id").delete(deleteBooking);
 
 export default bookingsRouter;
 

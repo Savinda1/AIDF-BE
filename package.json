@@ -4,6 +4,7 @@
   "main": "index.ts",
   "scripts": {
     "dev": "nodemon src/index.ts",
+    "build":"npm install && tsc",
     "start": "ts-node src/index.ts"
   },
   "author": "",

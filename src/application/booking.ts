@@ -33,21 +33,23 @@ export const createBooking = async (
     next(error);
   } };
 
-export const getAllBookingsForHotel = async (
-  req: Request,
-  res: Response,
-  next: NextFunction
+  export const deleteBooking = async (
+    req: Request,
+    res: Response,
+    next: NextFunction
+   
   ) => {
     try {
-  const hotelId = req.params.hotelId;
-  const bookings = await Booking.find({ hotelId: hotelId }).populate("userId");
-
-  res.status(200).json(bookings);
-  return;}
-  catch(error){
-    next(error);
-  } 
-};
+    const hotelId = req.params.id;
+    await Booking.findByIdAndDelete(hotelId);
+  
+    // Return the response
+    res.status(200).send();
+    return;}
+    catch(error){
+      next(error);
+    }
+  };
 
 export const getAllBookings = async (
   req: Request,
