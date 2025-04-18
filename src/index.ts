@@ -16,7 +16,7 @@ app.use(clerkMiddleware());
 conectDB();
 
 // Middleware
-app.use(express.json());
+app.use(express.json());//parse the json data
 
 //app.use(cors());
 app.use(cors({
