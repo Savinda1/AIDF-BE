@@ -16,7 +16,7 @@ import {
 const hotelsRouter = express.Router();
 
 hotelsRouter.route("/").get(getAllHotels).post(isAuthenticated,isAdmin,createHotel);
-
+//isAuthenticated,isAdmin
 hotelsRouter
   .route("/:id")
   .put(updateHotel)

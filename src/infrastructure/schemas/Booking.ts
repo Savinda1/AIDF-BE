@@ -1,16 +1,17 @@
 import mongoose from "mongoose";
 
 const bookingSchema = new mongoose.Schema({
- /* hotelId: {
+ hotelId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Hotel",
     required: true,
   },
   userId: {
-    type: mongoose.Schema.Types.ObjectId,
+    //type: mongoose.Schema.Types.ObjectId,
+    type: String,
     ref: "User",
     required: true,
-  },*/
+  },
   checkIn: {
     type: Date,
     required: true,
@@ -19,10 +20,15 @@ const bookingSchema = new mongoose.Schema({
     type: Date,
     required: true,
   },
- /* roomNumber: {
+  roomNumber: {
     type: Number,
     required: true,
-  },*/
+  },
+  paymentStatus: {
+    type: String,
+    enum: ["PENDING", "PAID"],
+    default: "PENDING",
+  },
 });
 
 const Booking = mongoose.model("Booking", bookingSchema);

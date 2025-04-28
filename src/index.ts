@@ -19,10 +19,10 @@ conectDB();
 app.use(express.json());//parse the json data
 
 app.use(cors());
-/*app.use(cors({
+app.use(cors({
   origin: "https://aidf-horizone-frountend-amila.netlify.app"
   
-}));*/
+}));
 
 
 

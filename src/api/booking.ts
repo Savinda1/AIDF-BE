@@ -4,12 +4,14 @@ import {
   createBooking,
   deleteBooking,
   getAllBookings,
+  getBookingById,
 } from "../application/booking";
 
 const bookingsRouter = express.Router();
 
 bookingsRouter.route("/").post(createBooking).get(getAllBookings);
 bookingsRouter.route("/:id").delete(deleteBooking);
+bookingsRouter.route("/:id").get(isAuthenticated, getBookingById);
 
 export default bookingsRouter;
 
