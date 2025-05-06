@@ -11,7 +11,7 @@ const bookingsRouter = express.Router();
 
 bookingsRouter.route("/").post(createBooking).get(getAllBookings);
 bookingsRouter.route("/:id").delete(deleteBooking);
-bookingsRouter.route("/:id").get(isAuthenticated, getBookingById);
+bookingsRouter.route("/:id").get(getBookingById);
 
 export default bookingsRouter;
 

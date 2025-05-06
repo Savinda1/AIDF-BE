@@ -19,7 +19,7 @@ export const createBooking = async (
       }
       const user = req.auth;
   // Add the booking
- await Booking.create({
+  const newBooking =await Booking.create({
      hotelId: booking.data.hotelId,
       userId: user.userId,
       checkIn: booking.data.checkIn,
@@ -46,7 +46,8 @@ export const createBooking = async (
   });
 
   // Return the response
-  res.status(201).send();
+  
+  res.status(201).json({ id: newBooking._id });
   return;}
   catch(error){
     next(error);
@@ -83,13 +84,14 @@ export const getAllBookings = async (
     next(error);
   } 
 };
+
 export const getBookingById = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const bookingId = req.params.bookingId;
+    const bookingId = req.params.id;
     const booking = await Booking.findById(bookingId);
     if (!booking) {
       throw new NotFoundError("Booking not found");

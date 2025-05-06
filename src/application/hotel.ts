@@ -1,13 +1,13 @@
 import { NextFunction,Request, Response } from "express";
+
 import Hotel from "../infrastructure/schemas/Hotel";
 import NotFoundError from "../domin/errors/not-found-error";
 import ValidationError from "../domin/errors/validation-error";
 import { CreateHotelDTO,UpdateHotelDTO } from "../domin/dtos/hotel";
-import mongoose from "mongoose";
 
 
 import OpenAI from "openai";
-import { Messages } from "openai/resources/chat/completions/messages";
+import stripe from "../infrastructure/stripe";
 
 const sleep = (ms:number) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -247,34 +247,51 @@ const sleep = (ms:number) => new Promise((resolve) => setTimeout(resolve, ms));
     }
   };
 
-export const createHotel= async(
-  req: Request,
-  res: Response,
-  next: NextFunction
-)=>{
-  try {
-const hotel= CreateHotelDTO.safeParse(req.body);
-
-if (!hotel.success) {
-  throw new ValidationError(hotel.error.message);
-}
- // Add the hotel
- await Hotel.create({
-      name: hotel.data.name,
-      location: hotel.data.location,
-      image: hotel.data.image,
-      price: hotel.data.price,
-      description: hotel.data.description,
-    });
-
-      // Return the response
-res.status(201).send();
-return;}
-catch(error){
-  next(error);    
-}
+  export const createHotel = async (req: Request, res: Response) => {
+    try {
+      // Validate input using Zod schema
+      const validationResult = CreateHotelDTO.safeParse(req.body);
+  
+      if (!validationResult.success) {
+        res.status(400).json({
+          message: "Invalid hotel data",
+          errors: validationResult.error.format(),
+        });
+        return;
+      }
+  
+      const hotelData = validationResult.data;
+  
+      // Create a product in Stripe
+      const stripeProduct = await stripe.products.create({
+        name: hotelData.name,
+        description: hotelData.description,
+        default_price_data: {
+          unit_amount: Math.round(hotelData.price* 100), // Convert to cents
+          currency: "usd",
+        },
+      });
+  
+      // Create the hotel with the Stripe price ID
+      const hotel = new Hotel({
+        name: hotelData.name,
+        location: hotelData.location,
+        image: hotelData.image,
+        price: hotelData.price,
+        description: hotelData.description,
+        stripePriceId: stripeProduct.default_price,
+      });
+  
+      await hotel.save();
+      res.status(201).json(hotel);
+    } catch (error) {
+      console.error("Error creating hotel:", error);
+      res.status(500).json({
+        message: "Failed to create hotel",
+        error: error instanceof Error ? error.message : String(error),
+      });
+    }
   };
- 
 
   export const updateHotel = async (
     req: Request,

@@ -8,7 +8,10 @@ import bookingsRouter from "./api/booking";
 import user from "./api/user";
 import cors from "cors";
 import globalErrorHandlingMiddleware from "./api/middlewares/global-error-handling-middleware";
+import { handleWebhook } from "./application/payment";
 import { clerkMiddleware } from "@clerk/express";
+import bodyParser from "body-parser";
+import paymentsRouter from "./api/payment";
 
 const app= express();
 app.use(clerkMiddleware());
@@ -19,16 +22,19 @@ conectDB();
 app.use(express.json());//parse the json data
 
 //app.use(cors());
-app.use(cors({
-  origin: "https://aidf-horizone-frountend-amila.netlify.app"
-  
-}));
 
+app.use(cors({ origin: process.env.FRONTEND_URL }));
 
+app.post(
+  "/api/stripe/webhook",
+  bodyParser.raw({ type: "application/json" }),
+  handleWebhook
+);
 
 app.use("/api/hotels",hotelsRouter);
 app.use("/api/bookings",bookingsRouter);
 app.use("/api/users",user);
+app.use("/api/payments", paymentsRouter);
 
 
 

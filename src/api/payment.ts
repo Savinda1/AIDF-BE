@@ -10,9 +10,9 @@ const paymentsRouter = express.Router();
 
 paymentsRouter
   .route("/create-checkout-session")
-  .post(isAuthenticated, createCheckoutSession);
+  .post(createCheckoutSession);
 paymentsRouter
   .route("/session-status")
-  .get(isAuthenticated, retrieveSessionStatus);
+  .get(retrieveSessionStatus);
 
 export default paymentsRouter;
