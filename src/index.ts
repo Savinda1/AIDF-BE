@@ -23,7 +23,7 @@ app.use(express.json());//parse the json data
 
 //app.use(cors());
 
-app.use(cors({ origin: "https://aidf-horizone-frountend-amila.netlify.app" }));
+app.use(cors({ origin: process.env.FRONTEND_URL }));
 
 app.post(
   "/api/stripe/webhook",
