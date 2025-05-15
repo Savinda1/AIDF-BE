@@ -21,7 +21,6 @@ app.use(clerkMiddleware());
 conectDB();
 
 // Middleware
-app.use(express.json());//parse the json data
 
 //app.use(cors());
 
@@ -32,6 +31,9 @@ app.post(
   bodyParser.raw({ type: "application/json" }),
   handleWebhook
 );
+
+app.use(express.json());//parse the json data
+
 
 app.use("/api/hotels",hotelsRouter);
 app.use("/api/bookings",bookingsRouter);
