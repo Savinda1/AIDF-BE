@@ -47,7 +47,7 @@ const sleep = (ms:number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 
 
-  /*1.Normal part
+  /*1.Normal part 
   export const generateResponse = async (
     req: Request,
     res: Response,

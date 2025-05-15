@@ -1,7 +1,6 @@
 import express from "express";
 import {
   createCheckoutSession,
-  handleWebhook,
   retrieveSessionStatus,
 } from "../application/payment";
 import bodyParser from "body-parser";

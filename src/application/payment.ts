@@ -37,7 +37,7 @@ async function fulfillCheckout(sessionId: string) {
 
   // Check the Checkout Session's payment_status property
   // to determine if fulfillment should be peformed
-  if (checkoutSession.payment_status !== "unpaid") {
+  if (checkoutSession.payment_status == "paid") {
     // TODO: Perform fulfillment of the line items
     // TODO: Record/save fulfillment status for this
     // Checkout Session
@@ -125,6 +125,7 @@ export const retrieveSessionStatus = async (req: Request, res: Response) => {
   const checkoutSession = await stripe.checkout.sessions.retrieve(
     req.query.session_id as string
   );
+  console.log("Fulfilling Checkout Session " + checkoutSession);
 
   const booking = await Booking.findById(checkoutSession.metadata?.bookingId);
   if (!booking) {
@@ -143,4 +144,5 @@ export const retrieveSessionStatus = async (req: Request, res: Response) => {
     customer_email: checkoutSession.customer_details?.email,
     paymentStatus: booking.paymentStatus,
   });
+ 
 };

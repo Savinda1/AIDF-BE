@@ -14,6 +14,8 @@ import bodyParser from "body-parser";
 import paymentsRouter from "./api/payment";
 
 const app= express();
+
+
 app.use(clerkMiddleware());
 
 conectDB();
@@ -38,7 +40,7 @@ app.use("/api/payments", paymentsRouter);
 
 
 
-app.use(globalErrorHandlingMiddleware);
+app.use(globalErrorHandlingMiddleware);//post midlware
 
 
 /*
