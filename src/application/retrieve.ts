@@ -35,7 +35,7 @@ export const retrieve = async (
       query as string
     );
 
-    console.log(results);
+    console.log("gcghchg",results);
 
     const matchedHotels = await Promise.all(
       results.map(async (result) => {

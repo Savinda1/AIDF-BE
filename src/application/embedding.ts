@@ -22,7 +22,8 @@ export const createEmbeddings = async (
 
           const hotels = await Hotel.find({});
 
-          const docs = hotels.map((hotel) => {
+              const docs = hotels.map((hotel) => {
+            
             const { _id, location, price, description } = hotel;//me tika thama wadagath wenne search karanna
             const doc = new Document({
               pageContent: `${description} Located in ${location}. Price per night: ${price}`,//search karala hana ewa
@@ -40,4 +41,5 @@ export const createEmbeddings = async (
           });
 }
     catch(error){
+
   }}
